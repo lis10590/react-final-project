@@ -1,26 +1,18 @@
-import { Card,Title, Columns,Column } from "react-bulma-companion";
+import { Card, Title, Columns, Column } from "react-bulma-companion";
 
-const Products = () =>{
-
-    return (
-        <Columns>
-        <Column size="is-half">
+const Products = () => {
+  return (
+    <Columns>
+      <Column size="is-half">
         <Card>
-            <Card.HeaderTitle centered>
-                <Title size="3" >Purchased Products</Title> 
-                 </Card.HeaderTitle>
-           
+          <Card.HeaderTitle centered>
+            <Title size="3">Purchased Products</Title>
+          </Card.HeaderTitle>
         </Card>
-        </Column>
-        <Column size="is-half">
-        </Column>
-        </Columns>
-  
-    )
-  
-
-
-}
-
+      </Column>
+      <Column size="is-half">hh</Column>
+    </Columns>
+  );
+};
 
 export default Products;
