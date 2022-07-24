@@ -1,0 +1,16 @@
+.panel-block {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.customers-table {
+  display: flex;
+  justify-content: center;
+}
+
+.customers-add-btn {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+}
