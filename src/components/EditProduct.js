@@ -29,11 +29,30 @@ const EditProduct = () => {
     setTitle(e.target.innerHTML);
     setSelectedProduct(e.target.innerHTML);
     setDropOpen(false);
+    const data = products.filter(
+      (product) => product.name === e.target.innerHTML
+    );
+    setSelectedProductId(data[0].id);
   };
 
   const currentProduct = products.filter(
     (product) => selectedProduct === product.name
   );
+
+  const selectedCustomers = () => {
+    const purchasedProduct = purchases.filter(
+      (purchase) => purchase.productId === selectedProductId
+    );
+    const selectedCustomers = [];
+    customers.map((customer) => {
+      purchasedProduct.map((product) => {
+        if (customer.id === product.customerId) {
+          selectedCustomers.push(customer);
+        }
+      });
+    });
+    return selectedCustomers;
+  };
 
   return (
     <div>
@@ -141,9 +160,7 @@ const EditProduct = () => {
         <Column size="half">
           <Panel>
             <Panel.Heading>Customers</Panel.Heading>
-            {/* {
-                purchases.filter(purchase=>purchase.productId === )
-            } */}
+            {}
           </Panel>
         </Column>
       </Columns>
