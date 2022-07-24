@@ -18,6 +18,7 @@ import { useState } from "react";
 const EditProduct = () => {
   const [dropOpen, setDropOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState("");
+  const [selectedProductId, setSelectedProductId] = useState(0);
   const [title, setTitle] = useState("Products");
 
   const toggleDropdown = () => {
@@ -140,6 +141,9 @@ const EditProduct = () => {
         <Column size="half">
           <Panel>
             <Panel.Heading>Customers</Panel.Heading>
+            {/* {
+                purchases.filter(purchase=>purchase.productId === )
+            } */}
           </Panel>
         </Column>
       </Columns>
