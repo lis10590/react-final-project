@@ -94,7 +94,11 @@ const EditCustomer = () => {
             </Panel.Block>
           </PanelComp>
         </Column>
-        <Column size="half"></Column>
+        <Column size="half">
+          <PanelComp panelHeading="Purchases">
+            <Panel.Block></Panel.Block>
+          </PanelComp>
+        </Column>
       </Columns>
     </div>
   );
