@@ -10,6 +10,7 @@ import { Routes, Route } from "react-router-dom";
 function App() {
   return (
     <div className="App">
+      <Menu />
       <Routes>
         <Route path="/" element={<Menu />} />
         <Route path="/products" element={<Products />} />

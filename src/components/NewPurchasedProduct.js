@@ -40,7 +40,11 @@ const NewPurchasedProduct = (props) => {
               >
                 <Dropdown.Content>
                   {props.products.map((product) => {
-                    return <Dropdown.Item>{product.name}</Dropdown.Item>;
+                    return (
+                      <Dropdown.Item key={product.id}>
+                        {product.name}
+                      </Dropdown.Item>
+                    );
                   })}
                 </Dropdown.Content>
               </Dropdown.Menu>

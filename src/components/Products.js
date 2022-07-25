@@ -1,11 +1,68 @@
 import { Panel, Columns, Column, Button } from "react-bulma-companion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTShirt } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import NewPurchasedProduct from "./NewPurchasedProduct";
+import { products, customers, purchases } from "./database";
 
 const Products = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [newDb, setNewDb] = useState([]);
+  const mergeDbs = () => {
+    const purchasesArr = [];
+    const purchasesArrFinal = [];
+    for (const purchase of purchases) {
+      for (const customer of customers) {
+        if (purchase.customerId === customer.id) {
+          const data = {
+            id: purchasesArr.length + 1,
+            customerName: customer.firstName + " " + customer.lastName,
+            product: purchase.productId,
+            date: purchase.date,
+          };
+          purchasesArr.push(data);
+        }
+      }
+    }
+
+    for (const purchase of purchasesArr) {
+      for (const product of products) {
+        if (product.id === purchase.product) {
+          const data = {
+            id: purchasesArrFinal.length + 1,
+            customerName: purchase.customerName,
+            productName: product.name,
+            date: purchasesArr.date,
+          };
+          purchasesArrFinal.push(data);
+        }
+      }
+    }
+    setNewDb(purchasesArrFinal);
+    console.log(purchasesArrFinal);
+  };
+
+  useEffect(() => {
+    mergeDbs();
+  }, []);
+
+  const createColl = () => {
+    const prodArr = [];
+
+    for (const purchase of purchases) {
+      for (const product of products) {
+        if (purchase.productId === product.id) {
+          const data = {
+            id: prodArr.length + 1,
+            product: product.name,
+            price: product.price,
+            date: purchase.date,
+          };
+          prodArr.push(data);
+        }
+      }
+    }
+  };
 
   const addNewProduct = () => {
     setIsOpen(true);
@@ -13,52 +70,20 @@ const Products = () => {
   const CloseModal = () => {
     setIsOpen(false);
   };
-  const products = [
-    {
-      id: 1,
-      name: "Bikini",
-      price: 150,
-      quantity: 3,
-      customers: ["Leanne Graham", "Ervin Howell"],
-    },
-    {
-      id: 2,
-      name: "Skirt",
-      price: 100,
-      quantity: 7,
-      customers: ["Clementine Bauch", "Patricia Lebsack"],
-    },
-    {
-      id: 3,
-      name: "Skinny Jeans",
-      price: 170,
-      quantity: 10,
-      customers: ["Clementine Bauch", "Patricia Lebsack", "Chelsey Dietrich"],
-    },
-    {
-      id: 4,
-      name: "Denim Shorts",
-      price: 80,
-      quantity: 6,
-      customers: [
-        "Mrs. Dennis Schulist",
-        "Kurtis Weissnat",
-        "Nicholas Runolfsdottir V",
-      ],
-    },
-    {
-      id: 5,
-      name: "T-Shirt",
-      price: 70,
-      quantity: 23,
-      customers: ["Clementina DuBuque", "Liat Cohen", "Tal Baum", "Gal Tal"],
-    },
-  ];
+
+  const NewPurchasesArray = () => {
+    for (const purchase of purchases) {
+    }
+  };
+
   return (
     <Columns>
       <Column size="half">
         <Panel>
-          <Panel.Heading>Purchased Products</Panel.Heading>
+          <Panel.Heading className="is-flex is-justify-content-center">
+            Purchased Products
+          </Panel.Heading>
+          <Panel.Block>Amount : {purchases.length}</Panel.Block>
         </Panel>
       </Column>
       <Column size="half">
@@ -66,10 +91,10 @@ const Products = () => {
           <Panel.Heading className="is-flex is-justify-content-center">
             Products
           </Panel.Heading>
-          {products.map((product) => {
+          {newDb.map((data) => {
             return (
               <Panel.Block
-                key={product.id}
+                key={data.id}
                 style={{
                   display: "flex",
                   flexDirection: "column",
@@ -79,36 +104,34 @@ const Products = () => {
                 <Panel.Icon>
                   <FontAwesomeIcon icon={faTShirt} />
                 </Panel.Icon>
-                {product.name}
+                {data.productName}
                 <br></br>
-                Price: {product.price}
+                Price:
                 <br></br>
-                Quantity: {product.quantity} <br></br>
+                Quantity: <br></br>
                 <Panel>
                   <Panel.Heading>Customers</Panel.Heading>
-                  {product.customers.map((customer) => {
-                    return (
-                      <Panel.Block
-                        style={{
-                          display: "flex",
-                          flexDirection: "column",
-                          alignItems: "stretch",
-                        }}
-                      >
-                        {customer}
-                        <br></br>
-                        Purchased On <br></br>
-                        <Button
-                          size="small"
-                          className="mt-6"
-                          color="primary"
-                          onClick={addNewProduct}
-                        >
-                          Add
-                        </Button>
-                      </Panel.Block>
-                    );
-                  })}
+
+                  <Panel.Block
+                    key={data.id}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "stretch",
+                    }}
+                  >
+                    {data.customerName}
+                    <br></br>
+                    Purchased On {" " + data.date} <br></br>
+                    <Button
+                      size="small"
+                      className="mt-6"
+                      color="primary"
+                      onClick={addNewProduct}
+                    >
+                      Add
+                    </Button>
+                  </Panel.Block>
                 </Panel>
               </Panel.Block>
             );
