@@ -19,6 +19,7 @@ const EditProduct = () => {
   const [dropOpen, setDropOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState("");
   const [selectedProductId, setSelectedProductId] = useState(0);
+  const [selectedCustomers, setSelectedCustomers] = useState([]);
   const [title, setTitle] = useState("Products");
 
   const toggleDropdown = () => {
@@ -33,34 +34,36 @@ const EditProduct = () => {
       (product) => product.name === e.target.innerHTML
     );
     setSelectedProductId(data[0].id);
+    const purchasedProduct = purchases.filter(
+      (purchase) => purchase.productId === selectedProductId
+    );
+    const selectedCustomersArr = [];
+    customers.map((customer) => {
+      purchasedProduct.map((product) => {
+        if (customer.id === product.customerId) {
+          selectedCustomersArr.push(customer);
+        }
+      });
+    });
+
+    setSelectedCustomers(selectedCustomersArr);
   };
 
   const currentProduct = products.filter(
     (product) => selectedProduct === product.name
   );
 
-  const selectedCustomers = () => {
-    const purchasedProduct = purchases.filter(
-      (purchase) => purchase.productId === selectedProductId
-    );
-    const selectedCustomers = [];
-    customers.map((customer) => {
-      purchasedProduct.map((product) => {
-        if (customer.id === product.customerId) {
-          selectedCustomers.push(customer);
-        }
-      });
-    });
-    return selectedCustomers;
-  };
-
   return (
     <div>
-      <Title>Edit Product</Title>
+      <Title className="is-flex is-justify-content-center mt-6 mb-6">
+        Edit Product
+      </Title>
       <Columns>
         <Column size="half">
           <Panel>
-            <Panel.Heading>Select Product</Panel.Heading>
+            <Panel.Heading className="is-flex is-justify-content-center">
+              Select Product
+            </Panel.Heading>
             <Panel.Block className="is-flex is-flex-direction-column">
               <Dropdown active={dropOpen}>
                 <Dropdown.Trigger>
@@ -159,8 +162,18 @@ const EditProduct = () => {
         </Column>
         <Column size="half">
           <Panel>
-            <Panel.Heading>Customers</Panel.Heading>
-            {}
+            <Panel.Heading className="is-flex is-justify-content-center">
+              Customers
+            </Panel.Heading>
+            {selectedCustomers.length > 0
+              ? selectedCustomers.map((customer) => {
+                  return (
+                    <Panel.Block>
+                      {customer.firstName + " " + customer.lastName}
+                    </Panel.Block>
+                  );
+                })
+              : null}
           </Panel>
         </Column>
       </Columns>
