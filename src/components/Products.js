@@ -4,6 +4,12 @@ import { faTShirt } from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect } from "react";
 import NewPurchasedProduct from "./NewPurchasedProduct";
 import { products, customers, purchases } from "./database";
+import {
+  findProductById,
+  findCustomerById,
+  ProductsArray,
+  newCollection,
+} from "./utils";
 
 const Products = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -46,24 +52,6 @@ const Products = () => {
     mergeDbs();
   }, []);
 
-  const createColl = () => {
-    const prodArr = [];
-
-    for (const purchase of purchases) {
-      for (const product of products) {
-        if (purchase.productId === product.id) {
-          const data = {
-            id: prodArr.length + 1,
-            product: product.name,
-            price: product.price,
-            date: purchase.date,
-          };
-          prodArr.push(data);
-        }
-      }
-    }
-  };
-
   const addNewProduct = () => {
     setIsOpen(true);
   };
@@ -71,10 +59,8 @@ const Products = () => {
     setIsOpen(false);
   };
 
-  const NewPurchasesArray = () => {
-    for (const purchase of purchases) {
-    }
-  };
+  ProductsArray();
+  newCollection();
 
   return (
     <Columns>
@@ -91,7 +77,30 @@ const Products = () => {
           <Panel.Heading className="is-flex is-justify-content-center">
             Products
           </Panel.Heading>
-          {newDb.map((data) => {
+          {purchases.map((purchase) => {
+            const product = findProductById(purchase.productId);
+            const customer = findCustomerById(purchase.customerId);
+
+            return (
+              <Panel.Block
+                key={purchase.id}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "stretch",
+                }}
+              >
+                <Panel.Icon>
+                  <FontAwesomeIcon icon={faTShirt} />
+                </Panel.Icon>
+                {product.productName} <br></br>
+                Price: {product.productPrice}
+                <br></br>
+                Quantity: {product.productQuantity} <br></br>
+              </Panel.Block>
+            );
+          })}
+          {/* {newDb.map((data) => {
             return (
               <Panel.Block
                 key={data.id}
@@ -135,7 +144,7 @@ const Products = () => {
                 </Panel>
               </Panel.Block>
             );
-          })}
+          })} */}
         </Panel>
         <NewPurchasedProduct
           products={products}
