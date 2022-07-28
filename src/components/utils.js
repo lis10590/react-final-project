@@ -93,3 +93,51 @@ export const newCollection = () => {
   }
   console.log(selectedProducts);
 };
+
+export const findPurchaseByProductId = (id) => {
+  let arr = [];
+  purchases.map((purchase) => {
+    if (purchase.productId === id) {
+      arr.push(purchase);
+    }
+    console.log(arr);
+    return arr;
+  });
+};
+
+export const duplicateProducts = (arr) => {
+  let newArr = [];
+  if (arr.length > 1) {
+    arr.map((product) => {
+      newArr.push(product.customerId);
+    });
+    return newArr;
+  }
+};
+
+export const customersArr = (arr) => {
+  let array = [];
+  for (const item of arr) {
+    for (const customer of customers) {
+      if (item === customer.id) {
+        array.push(customer.firstName + " " + customer.lastName);
+      }
+    }
+  }
+  return array;
+};
+
+export const newProduct = (arr, id) => {
+  for (const product of products) {
+    if (product.id === id) {
+      const newProduct = {
+        ...product,
+        customers: arr,
+      };
+      return newProduct;
+    }
+  }
+};
+
+const p = findPurchaseByProductId(5);
+const a = duplicateProducts(p);

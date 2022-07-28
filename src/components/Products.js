@@ -9,6 +9,7 @@ import {
   findCustomerById,
   ProductsArray,
   newCollection,
+  findPurchaseByProductId,
 } from "./utils";
 
 const Products = () => {
@@ -59,8 +60,9 @@ const Products = () => {
     setIsOpen(false);
   };
 
-  ProductsArray();
-  newCollection();
+  // ProductsArray();
+  // newCollection();
+  findPurchaseByProductId(5);
 
   return (
     <Columns>
