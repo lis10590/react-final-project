@@ -60,9 +60,9 @@ const Products = () => {
     setIsOpen(false);
   };
 
-  // ProductsArray();
+  ProductsArray();
   // newCollection();
-  findPurchaseByProductId(5);
+  // findPurchaseByProductId(5);
 
   return (
     <Columns>
@@ -95,10 +95,10 @@ const Products = () => {
                 <Panel.Icon>
                   <FontAwesomeIcon icon={faTShirt} />
                 </Panel.Icon>
-                {product.productName} <br></br>
-                Price: {product.productPrice}
+                {product.name} <br></br>
+                Price: {product.price}
                 <br></br>
-                Quantity: {product.productQuantity} <br></br>
+                Quantity: {product.quantity} <br></br>
               </Panel.Block>
             );
           })}
