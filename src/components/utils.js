@@ -44,21 +44,20 @@ export const ProductsArray = () => {
       }
     }
   }
-  console.log(arr);
+
   const customersArr = arr.map((customer) => {
     return customer.name;
   });
   const isDuplicate = customersArr.filter((item, index) => {
     return customersArr.indexOf(item) !== index;
   });
-  console.log(isDuplicate);
 
   const [duplicateProducts] = isDuplicate.map((item) => {
     return products.filter((product) => {
       return item === product.name;
     });
   });
-  console.log(duplicateProducts);
+
   const selectedCustomersId = [];
   const selectedCustomers = [];
 
@@ -69,7 +68,6 @@ export const ProductsArray = () => {
       }
     }
   }
-  console.log(selectedCustomersId);
 
   for (const customer of customers) {
     for (const id of selectedCustomersId) {
@@ -78,21 +76,19 @@ export const ProductsArray = () => {
       }
     }
   }
-
-  console.log(selectedCustomers);
 };
 
-export const newCollection = () => {
-  let selectedProducts = [];
-  for (const product of products) {
-    for (const purchase of purchases) {
-      if (purchase.productId === product.id) {
-        selectedProducts.push(product);
-      }
-    }
-  }
-  console.log(selectedProducts);
-};
+// export const newCollection = () => {
+//   let selectedProducts = [];
+//   for (const product of products) {
+//     for (const purchase of purchases) {
+//       if (purchase.productId === product.id) {
+//         selectedProducts.push(product);
+//       }
+//     }
+//   }
+//   console.log(selectedProducts);
+// };
 
 export const findPurchaseByProductId = (idArray) => {
   let arr = [];
@@ -103,12 +99,7 @@ export const findPurchaseByProductId = (idArray) => {
       }
     }
   }
-  // purchases.map((purchase) => {
-  //   if (purchase.productId === id) {
-  //     arr.push(purchase);
-  //   }
-  //   console.log(arr);
-  // });
+
   return arr;
 };
 
@@ -134,7 +125,7 @@ export const customersArr = (arr) => {
   return array;
 };
 
-export const newProduct = (arr, idArray) => {
+export const newProduct = (arr, idArray, dates) => {
   let newProduct = {};
   for (const product of products) {
     for (const id of idArray) {
@@ -142,19 +133,13 @@ export const newProduct = (arr, idArray) => {
         newProduct = {
           ...product,
           customers: arr,
+          dates: dates,
         };
       }
     }
   }
   return newProduct;
 };
-
-// const p = findPurchaseByProductId(5);
-// console.log(p);
-// const a = duplicateProducts(p);
-// const b = customersArr(a);
-// const c = newProduct(b, 5);
-// console.log(c);
 
 function hasDuplicates(array) {
   const dup = new Set(array).size !== array.length;
@@ -177,9 +162,6 @@ const productIdArray = () => {
   return arr;
 };
 
-console.log(productIdArray());
-console.log(hasDuplicates(productIdArray()));
-
 const ProductsArr = () => {
   const arr = [];
   for (const purchase of purchases) {
@@ -188,6 +170,7 @@ const ProductsArr = () => {
         const data = {
           ...product,
           customers: purchase.customerId,
+          dates: purchase.date,
         };
 
         arr.push(data);
@@ -202,7 +185,7 @@ const ProductsArr = () => {
       }
     }
   }
-
+  console.log(arr);
   return arr;
 };
 
@@ -217,18 +200,41 @@ const deleteProduct = (idArr, productsArray) => {
   return productsArray;
 };
 
-const PurchasedProducts = () => {
+const createId = (arr) => {
+  let index = 1;
+  for (const item of arr) {
+    item.id = index;
+    index++;
+  }
+  return arr;
+};
+
+const dateArr = (dupProducts) => {
+  let arr = [];
+  for (const purchase of purchases) {
+    for (const item of dupProducts) {
+      if (purchase.productId === item) {
+        arr.push(purchase.date);
+      }
+    }
+  }
+  return arr;
+};
+
+export const PurchasedProducts = () => {
   const productIdArr = productIdArray();
   const dupProducts = hasDuplicates(productIdArr);
   const dupPurchase = findPurchaseByProductId(dupProducts);
   const a = duplicateProducts(dupPurchase);
   const customersArry = customersArr(a);
-  const product = newProduct(customersArry, productIdArr);
+  const dates = dateArr(dupProducts);
+  const product = newProduct(customersArry, productIdArr, dates);
   const productsArray = ProductsArr();
   const newProductsArray = deleteProduct(dupProducts, productsArray);
   newProductsArray.push(product);
+  const finalArray = createId(newProductsArray);
 
-  return newProductsArray;
+  return finalArray;
 };
 
 console.log(PurchasedProducts());

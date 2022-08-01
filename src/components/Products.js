@@ -1,57 +1,13 @@
 import { Panel, Columns, Column, Button } from "react-bulma-companion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTShirt } from "@fortawesome/free-solid-svg-icons";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import NewPurchasedProduct from "./NewPurchasedProduct";
 import { products, customers, purchases } from "./database";
-import {
-  findProductById,
-  findCustomerById,
-  ProductsArray,
-  newCollection,
-  findPurchaseByProductId,
-} from "./utils";
+import { PurchasedProducts } from "./utils";
 
 const Products = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [newDb, setNewDb] = useState([]);
-  const mergeDbs = () => {
-    const purchasesArr = [];
-    const purchasesArrFinal = [];
-    for (const purchase of purchases) {
-      for (const customer of customers) {
-        if (purchase.customerId === customer.id) {
-          const data = {
-            id: purchasesArr.length + 1,
-            customerName: customer.firstName + " " + customer.lastName,
-            product: purchase.productId,
-            date: purchase.date,
-          };
-          purchasesArr.push(data);
-        }
-      }
-    }
-
-    for (const purchase of purchasesArr) {
-      for (const product of products) {
-        if (product.id === purchase.product) {
-          const data = {
-            id: purchasesArrFinal.length + 1,
-            customerName: purchase.customerName,
-            productName: product.name,
-            date: purchasesArr.date,
-          };
-          purchasesArrFinal.push(data);
-        }
-      }
-    }
-    setNewDb(purchasesArrFinal);
-    console.log(purchasesArrFinal);
-  };
-
-  useEffect(() => {
-    mergeDbs();
-  }, []);
 
   const addNewProduct = () => {
     setIsOpen(true);
@@ -60,9 +16,8 @@ const Products = () => {
     setIsOpen(false);
   };
 
-  ProductsArray();
-  // newCollection();
-  // findPurchaseByProductId(5);
+  const productsList = PurchasedProducts();
+  console.log(productsList[0].dates.toLocaleDateString("en-UK"));
 
   return (
     <Columns>
@@ -79,13 +34,10 @@ const Products = () => {
           <Panel.Heading className="is-flex is-justify-content-center">
             Products
           </Panel.Heading>
-          {purchases.map((purchase) => {
-            const product = findProductById(purchase.productId);
-            const customer = findCustomerById(purchase.customerId);
-
+          {productsList.map((product) => {
             return (
               <Panel.Block
-                key={purchase.id}
+                key={product.id}
                 style={{
                   display: "flex",
                   flexDirection: "column",
@@ -99,54 +51,22 @@ const Products = () => {
                 Price: {product.price}
                 <br></br>
                 Quantity: {product.quantity} <br></br>
+                <Panel.Heading style={{ fontSize: "0.75em" }}>
+                  Customers
+                </Panel.Heading>
+                {Array.isArray(product.customers) ? (
+                  product.customers.map((customer) => {
+                    return <Panel.Block>{customer}</Panel.Block>;
+                  })
+                ) : (
+                  <Panel.Block>
+                    {product.customers} on{" "}
+                    {product.dates.toLocaleDateString("en-UK")}
+                  </Panel.Block>
+                )}
               </Panel.Block>
             );
           })}
-          {/* {newDb.map((data) => {
-            return (
-              <Panel.Block
-                key={data.id}
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "stretch",
-                }}
-              >
-                <Panel.Icon>
-                  <FontAwesomeIcon icon={faTShirt} />
-                </Panel.Icon>
-                {data.productName}
-                <br></br>
-                Price:
-                <br></br>
-                Quantity: <br></br>
-                <Panel>
-                  <Panel.Heading>Customers</Panel.Heading>
-
-                  <Panel.Block
-                    key={data.id}
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "stretch",
-                    }}
-                  >
-                    {data.customerName}
-                    <br></br>
-                    Purchased On {" " + data.date} <br></br>
-                    <Button
-                      size="small"
-                      className="mt-6"
-                      color="primary"
-                      onClick={addNewProduct}
-                    >
-                      Add
-                    </Button>
-                  </Panel.Block>
-                </Panel>
-              </Panel.Block>
-            );
-          })} */}
         </Panel>
         <NewPurchasedProduct
           products={products}
