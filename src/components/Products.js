@@ -2,18 +2,26 @@ import { Panel, Columns, Column, Button } from "react-bulma-companion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTShirt } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
-import NewPurchasedProduct from "./NewPurchasedProduct";
 import { products, customers, purchases } from "./database";
 import { PurchasedProducts } from "./utils";
+import { useDispatch, useSelector } from "react-redux";
+import { modalActions } from "../store/modalReducer";
+import AddProductToCustomer from "./AddProductToCustomer";
 
 const Products = () => {
+  const dispatch = useDispatch();
+  const modal = useSelector((state) => state.modal.modalState);
   const [isOpen, setIsOpen] = useState(false);
 
   const addNewProduct = () => {
     setIsOpen(true);
   };
+
+  const openModal = () => {
+    dispatch(modalActions.ModalOpen());
+  };
   const CloseModal = () => {
-    setIsOpen(false);
+    dispatch(modalActions.ModalClose());
   };
 
   const productsList = PurchasedProducts();
@@ -56,20 +64,28 @@ const Products = () => {
                 {Array.isArray(product.customers) ? (
                   product.customers.map((customer) => {
                     return (
-                      <Panel.Block component="a">
+                      <Panel.Block>
                         {customer.name} on{" "}
                         {customer.date.toLocaleDateString("en-UK")}
-                        <Button className="mt-4" color="primary">
+                        <Button
+                          className="mt-4"
+                          color="primary"
+                          onClick={openModal}
+                        >
                           Add
                         </Button>
                       </Panel.Block>
                     );
                   })
                 ) : (
-                  <Panel.Block component="a">
+                  <Panel.Block>
                     {product.customers} on{" "}
                     {product.dates.toLocaleDateString("en-UK")}
-                    <Button className="mt-4" color="primary">
+                    <Button
+                      className="mt-4"
+                      color="primary"
+                      onClick={openModal}
+                    >
                       Add
                     </Button>
                   </Panel.Block>
@@ -78,11 +94,8 @@ const Products = () => {
             );
           })}
         </Panel>
-        <NewPurchasedProduct
-          products={products}
-          modalOpen={isOpen}
-          modalClose={CloseModal}
-        />
+
+        <AddProductToCustomer isOpen={modal} onClose={CloseModal} />
       </Column>
     </Columns>
   );

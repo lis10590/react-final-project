@@ -1,6 +1,5 @@
 import { Button, Table, Title } from "react-bulma-companion";
 import styles from "../styles/styles.scss";
-import NewPurchasedProduct from "./NewPurchasedProduct";
 
 const Customers = () => {
   const customers = [
@@ -48,7 +47,6 @@ const Customers = () => {
       <div className="customers-add-btn">
         <Button color="primary">Add</Button>
       </div>
-      {/* <NewPurchasedProduct /> */}
     </div>
   );
 };

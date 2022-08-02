@@ -3,7 +3,7 @@ import DropdownComp from "./DropdownComp";
 import { useState } from "react";
 import { products } from "./database";
 
-const AddProductToCustomer = () => {
+const AddProductToCustomer = (props) => {
   const [dropOpen, setDropOpen] = useState(false);
   const [title, setTitle] = useState("Products");
   const [selectedProduct, setSelectedProduct] = useState("");
@@ -19,7 +19,7 @@ const AddProductToCustomer = () => {
   };
 
   return (
-    <Modal>
+    <Modal active={props.isOpen}>
       <Modal.Background>
         <Modal.Card>
           <Modal.CardHead>
@@ -27,24 +27,28 @@ const AddProductToCustomer = () => {
               Add Product
             </Modal.CardTitle>
           </Modal.CardHead>
-          <Modal.Close onClick={props.modalClose} />
+          <Modal.Close onClick={props.onClose} />
           <Modal.CardBody style={{ height: "440px" }}>
-            <DropdownComp
-              active={dropOpen}
-              dropTitle={title}
-              onClickDrop={toggleDropdown}
-              dividerName="Products"
-              onClickDivider={selectProduct}
-            >
-              {products.map((product) => {
-                return (
-                  <Dropdown.Item key={product.id} onClick={selectProduct}>
-                    {product.name}
-                  </Dropdown.Item>
-                );
-              })}
-            </DropdownComp>
-            <Button color="primary">Save</Button>
+            <div className="is-flex is-justify-content-center">
+              <DropdownComp
+                active={dropOpen}
+                dropTitle={title}
+                onClickDrop={toggleDropdown}
+                dividerName="Products"
+                onClickDivider={selectProduct}
+              >
+                {products.map((product) => {
+                  return (
+                    <Dropdown.Item key={product.id} onClick={selectProduct}>
+                      {product.name}
+                    </Dropdown.Item>
+                  );
+                })}
+              </DropdownComp>
+            </div>
+            <div className="is-flex is-justify-content-center mt-6">
+              <Button color="primary">Save</Button>
+            </div>
           </Modal.CardBody>
         </Modal.Card>
       </Modal.Background>
