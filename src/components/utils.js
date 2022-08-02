@@ -127,13 +127,33 @@ export const customersArr = (arr) => {
 
 export const newProduct = (arr, idArray, dates) => {
   let newProduct = {};
+  let customer = {};
+  let customers = [];
+
+  arr.map((name, index) => {
+    customer = {
+      name: name,
+      date: dates[index],
+    };
+    customers.push(customer);
+  });
+
+  // for (const name of arr) {
+  //   for (const date of dates) {
+  //     customer = {
+  //       name: name,
+  //       date: date,
+  //     };
+
+  //     customers.push(customer);
+  //   }
+  // }
   for (const product of products) {
     for (const id of idArray) {
       if (product.id === id) {
         newProduct = {
           ...product,
-          customers: arr,
-          dates: dates,
+          customers: customers,
         };
       }
     }

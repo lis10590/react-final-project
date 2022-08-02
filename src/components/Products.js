@@ -17,7 +17,6 @@ const Products = () => {
   };
 
   const productsList = PurchasedProducts();
-  console.log(productsList[0].dates.toLocaleDateString("en-UK"));
 
   return (
     <Columns>
@@ -56,12 +55,23 @@ const Products = () => {
                 </Panel.Heading>
                 {Array.isArray(product.customers) ? (
                   product.customers.map((customer) => {
-                    return <Panel.Block>{customer}</Panel.Block>;
+                    return (
+                      <Panel.Block component="a">
+                        {customer.name} on{" "}
+                        {customer.date.toLocaleDateString("en-UK")}
+                        <Button className="mt-4" color="primary">
+                          Add
+                        </Button>
+                      </Panel.Block>
+                    );
                   })
                 ) : (
-                  <Panel.Block>
+                  <Panel.Block component="a">
                     {product.customers} on{" "}
                     {product.dates.toLocaleDateString("en-UK")}
+                    <Button className="mt-4" color="primary">
+                      Add
+                    </Button>
                   </Panel.Block>
                 )}
               </Panel.Block>
