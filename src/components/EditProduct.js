@@ -33,10 +33,15 @@ const EditProduct = () => {
     const data = products.filter(
       (product) => product.name === e.target.innerHTML
     );
+    console.log(data);
+    console.log(data[0].id);
+
     setSelectedProductId(data[0].id);
+    console.log(selectedProductId);
     const purchasedProduct = purchases.filter(
       (purchase) => purchase.productId === selectedProductId
     );
+    console.log(purchasedProduct);
     const selectedCustomersArr = [];
     customers.map((customer) => {
       purchasedProduct.map((product) => {
@@ -49,6 +54,7 @@ const EditProduct = () => {
     setSelectedCustomers(selectedCustomersArr);
   };
 
+  console.log(selectedCustomers);
   const currentProduct = products.filter(
     (product) => selectedProduct === product.name
   );
