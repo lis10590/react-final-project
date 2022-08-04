@@ -15,7 +15,7 @@ export const getProducts = async () => {
     dataArr.push(obj);
   });
 
-  console.log(dataArr);
+  return dataArr;
 };
 
 export const addProduct = async (product) => {

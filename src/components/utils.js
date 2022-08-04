@@ -138,16 +138,6 @@ export const newProduct = (arr, idArray, dates) => {
     customers.push(customer);
   });
 
-  // for (const name of arr) {
-  //   for (const date of dates) {
-  //     customer = {
-  //       name: name,
-  //       date: date,
-  //     };
-
-  //     customers.push(customer);
-  //   }
-  // }
   for (const product of products) {
     for (const id of idArray) {
       if (product.id === id) {
@@ -205,7 +195,7 @@ const ProductsArr = () => {
       }
     }
   }
-  console.log(arr);
+
   return arr;
 };
 
@@ -256,5 +246,3 @@ export const PurchasedProducts = () => {
 
   return finalArray;
 };
-
-console.log(PurchasedProducts());

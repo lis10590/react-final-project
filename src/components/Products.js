@@ -1,17 +1,76 @@
 import { Panel, Columns, Column, Button } from "react-bulma-companion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTShirt } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
-import { products, customers, purchases } from "./database";
+import { useState, useEffect } from "react";
 import { PurchasedProducts } from "./utils";
 import { useDispatch, useSelector } from "react-redux";
 import { modalActions } from "../store/modalReducer";
+import { getAllProducts, selectAllProducts } from "../store/productsReducer";
+import { getAllPurchases, selectAllPurchases } from "../store/purchasesReducer";
+import { getAllCustomers, selectAllCustomers } from "../store/customersReducer";
 import AddProductToCustomer from "./AddProductToCustomer";
 
 const Products = () => {
   const dispatch = useDispatch();
   const modal = useSelector((state) => state.modal.modalState);
   const [isOpen, setIsOpen] = useState(false);
+
+  const products = useSelector(selectAllProducts);
+  const purchases = useSelector(selectAllPurchases);
+  const customers = useSelector(selectAllCustomers);
+
+  useEffect(() => {
+    dispatch(getAllProducts());
+    dispatch(getAllPurchases());
+    dispatch(getAllCustomers());
+  }, [dispatch]);
+
+  const PurchasedProductsList = () => {
+    let productIdArr = [];
+    for (const purchase in purchases) {
+      productIdArr.push(purchase.productId);
+    }
+    const dup = new Set(productIdArr).size !== productIdArr.length;
+    let isDuplicate;
+    if (dup) {
+      isDuplicate = productIdArr.filter((item, index) => {
+        return productIdArr.indexOf(item) !== index;
+      });
+    }
+
+    let duplicatePurchases = [];
+    for (const purchase of purchases) {
+      for (const item of isDuplicate) {
+        if (purchase.productId === item) {
+          duplicatePurchases.push(purchase);
+        }
+      }
+    }
+    let customersIdArr = [];
+    if (duplicatePurchases.length > 1) {
+      for (const item of duplicatePurchases) {
+        customersIdArr.push(item.customerId);
+      }
+    }
+
+    let customersArr = [];
+    for (const item of customersIdArr) {
+      for (const customer of customers) {
+        if (item === customer.id) {
+          customersArr.push(customer.firstName + " " + customer.lastName);
+        }
+      }
+    }
+
+    let dateArr = [];
+    for (const purchase of purchases) {
+      for (const item of isDuplicate) {
+        if (purchase.productId === item) {
+          dateArr.push(purchase.date);
+        }
+      }
+    }
+  };
 
   const addNewProduct = () => {
     setIsOpen(true);

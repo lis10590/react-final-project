@@ -15,14 +15,14 @@ export const getPurchases = async () => {
     dataArr.push(obj);
   });
 
-  console.log(dataArr);
+  return dataArr;
 };
 
-export const addCustomer = async (purchase) => {
+export const addPurchase = async (purchase) => {
   await firebase.firestore().collection("purchases").add(purchase);
 };
 
-export const updateCustomer = async (purchaseId, newData) => {
+export const updatePurchase = async (purchaseId, newData) => {
   await firebase
     .firestore()
     .collection("purchases")
@@ -30,6 +30,6 @@ export const updateCustomer = async (purchaseId, newData) => {
     .set(newData);
 };
 
-export const deleteCustomer = async (purchaseId) => {
+export const deletePurchase = async (purchaseId) => {
   await firebase.firestore().collection("purchases").doc(purchaseId).delete();
 };

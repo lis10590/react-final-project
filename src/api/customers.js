@@ -15,7 +15,7 @@ export const getCustomers = async () => {
     dataArr.push(obj);
   });
 
-  console.log(dataArr);
+  return dataArr;
 };
 
 export const addCustomer = async (customer) => {
