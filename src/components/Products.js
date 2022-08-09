@@ -13,7 +13,7 @@ import AddProductToCustomer from "./AddProductToCustomer";
 const Products = () => {
   const dispatch = useDispatch();
   const modal = useSelector((state) => state.modal.modalState);
-  const [isOpen, setIsOpen] = useState(false);
+  const [selectedCustomer, setSelectedCustomer] = useState("");
 
   const products = useSelector(selectAllProducts);
   const purchases = useSelector(selectAllPurchases);
@@ -25,65 +25,16 @@ const Products = () => {
     dispatch(getAllCustomers());
   }, [dispatch]);
 
-  const PurchasedProductsList = () => {
-    let productIdArr = [];
-    for (const purchase in purchases) {
-      productIdArr.push(purchase.productId);
-    }
-    const dup = new Set(productIdArr).size !== productIdArr.length;
-    let isDuplicate;
-    if (dup) {
-      isDuplicate = productIdArr.filter((item, index) => {
-        return productIdArr.indexOf(item) !== index;
-      });
-    }
-
-    let duplicatePurchases = [];
-    for (const purchase of purchases) {
-      for (const item of isDuplicate) {
-        if (purchase.productId === item) {
-          duplicatePurchases.push(purchase);
-        }
-      }
-    }
-    let customersIdArr = [];
-    if (duplicatePurchases.length > 1) {
-      for (const item of duplicatePurchases) {
-        customersIdArr.push(item.customerId);
-      }
-    }
-
-    let customersArr = [];
-    for (const item of customersIdArr) {
-      for (const customer of customers) {
-        if (item === customer.id) {
-          customersArr.push(customer.firstName + " " + customer.lastName);
-        }
-      }
-    }
-
-    let dateArr = [];
-    for (const purchase of purchases) {
-      for (const item of isDuplicate) {
-        if (purchase.productId === item) {
-          dateArr.push(purchase.date);
-        }
-      }
-    }
-  };
-
-  const addNewProduct = () => {
-    setIsOpen(true);
-  };
-
-  const openModal = () => {
+  const openModal = (customer) => {
     dispatch(modalActions.ModalOpen());
+    setSelectedCustomer(customer);
   };
   const CloseModal = () => {
     dispatch(modalActions.ModalClose());
   };
 
-  const productsList = PurchasedProducts();
+  const productsList = PurchasedProducts(customers, purchases, products);
+  console.log(productsList);
 
   return (
     <Columns>
@@ -124,12 +75,11 @@ const Products = () => {
                   product.customers.map((customer) => {
                     return (
                       <Panel.Block>
-                        {customer.name} on{" "}
-                        {customer.date.toLocaleDateString("en-UK")}
+                        {customer.name} on {customer.date}
                         <Button
                           className="mt-4"
                           color="primary"
-                          onClick={openModal}
+                          onClick={() => openModal(customer.name)}
                         >
                           Add
                         </Button>
@@ -138,12 +88,11 @@ const Products = () => {
                   })
                 ) : (
                   <Panel.Block>
-                    {product.customers} on{" "}
-                    {product.dates.toLocaleDateString("en-UK")}
+                    {product.customers} on {product.dates}
                     <Button
                       className="mt-4"
                       color="primary"
-                      onClick={openModal}
+                      onClick={() => openModal(product.customers)}
                     >
                       Add
                     </Button>
@@ -154,7 +103,11 @@ const Products = () => {
           })}
         </Panel>
 
-        <AddProductToCustomer isOpen={modal} onClose={CloseModal} />
+        <AddProductToCustomer
+          isOpen={modal}
+          onClose={CloseModal}
+          customer={selectedCustomer}
+        />
       </Column>
     </Columns>
   );

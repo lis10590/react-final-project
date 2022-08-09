@@ -84,4 +84,10 @@ export const purchases = [
     productId: 5,
     date: new Date("2022-05-10"),
   },
+  {
+    id: 5,
+    customerId: 2,
+    productId: 4,
+    date: new Date("2022-07-15"),
+  },
 ];
