@@ -32,35 +32,19 @@ const AddProductToCustomer = (props) => {
   };
 
   const onSaveProductHandler = () => {
-    let arr = [];
-    let obj = {};
-    let customerId;
     let productId;
-    for (const customerItem of customers) {
-      obj = {
-        fullName: customerItem.firstName + " " + customerItem.lastName,
-        id: customerItem.id,
-      };
-
-      arr.push(obj);
-    }
-
-    for (const item of arr) {
-      if (item.fullName === props.customer) {
-        customerId = item.id;
+    let purchase = {};
+    for (const product of products) {
+      if (selectedProduct === product.name) {
+        productId = product.id;
       }
     }
-
-    for (const item of products) {
-      if (item.name === selectedProduct) {
-        productId = item.id;
-      }
-    }
-    const purchase = {
-      customerId,
+    purchase = {
       productId,
+      customerId: props.customer,
       date: new Date().toLocaleString().split(",")[0],
     };
+
     dispatch(purchaseAddition(purchase));
   };
 

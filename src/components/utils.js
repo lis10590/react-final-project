@@ -356,3 +356,39 @@ export const PurchasedProductsList = (customers, purchases, products) => {
   const finalArr = createId(mergedArr);
   return finalArr;
 };
+
+export const productsList = (products, purchases, customers) => {
+  let purchasesArr = [...purchases];
+  let productsArr = [...products];
+
+  // for (const purchase of purchases) {
+  //   purchasesArr.push(purchase);
+  // }
+
+  for (const purchase of purchasesArr) {
+    for (const customer of customers) {
+      if (customer.id === purchase.customerId) {
+        purchase.customerName = customer.firstName + " " + customer.lastName;
+      }
+    }
+  }
+  console.log(purchasesArr);
+
+  // for (const product of products) {
+  //   productsArr.push(product);
+  // }
+  for (const product of productsArr) {
+    for (const purchase of purchasesArr) {
+      if (product.id === purchase.productId) {
+        if (product.customer && product.date) {
+          product.customer.push(purchase.customerName);
+          product.date.push(purchase.date);
+        } else {
+          product.customer = [purchase.customerName];
+          product.date = [purchase.date];
+        }
+      }
+    }
+  }
+  console.log(productsArr);
+};

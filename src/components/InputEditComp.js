@@ -6,7 +6,11 @@ const InputEditComp = (props) => {
       <Field>
         <Control>
           {props.inputName}
-          <Input type={props.type} placeholder={props.placeholder} />
+          <Input
+            onChange={props.onChange}
+            type={props.type}
+            placeholder={props.placeholder}
+          />
         </Control>
       </Field>
     </div>

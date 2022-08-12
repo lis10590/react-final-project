@@ -2,22 +2,18 @@ import { Panel, Columns, Column, Button } from "react-bulma-companion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTShirt } from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect } from "react";
-import { PurchasedProducts } from "./utils";
 import { useDispatch, useSelector } from "react-redux";
 import { modalActions } from "../store/modalReducer";
 import { getAllProducts, selectAllProducts } from "../store/productsReducer";
 import { getAllPurchases, selectAllPurchases } from "../store/purchasesReducer";
 import { getAllCustomers, selectAllCustomers } from "../store/customersReducer";
 import AddProductToCustomer from "./AddProductToCustomer";
+import { Link } from "react-router-dom";
 
 const Products = () => {
   const dispatch = useDispatch();
   const modal = useSelector((state) => state.modal.modalState);
   const [selectedCustomer, setSelectedCustomer] = useState("");
-
-  const products = useSelector(selectAllProducts);
-  const purchases = useSelector(selectAllPurchases);
-  const customers = useSelector(selectAllCustomers);
 
   useEffect(() => {
     dispatch(getAllProducts());
@@ -25,16 +21,19 @@ const Products = () => {
     dispatch(getAllCustomers());
   }, [dispatch]);
 
+  const products = useSelector(selectAllProducts);
+  const purchases = useSelector(selectAllPurchases);
+  const customers = useSelector(selectAllCustomers);
+  console.log(products);
+
   const openModal = (customer) => {
     dispatch(modalActions.ModalOpen());
+    console.log(customer);
     setSelectedCustomer(customer);
   };
   const CloseModal = () => {
     dispatch(modalActions.ModalClose());
   };
-
-  const productsList = PurchasedProducts(customers, purchases, products);
-  console.log(productsList);
 
   return (
     <Columns>
@@ -51,7 +50,7 @@ const Products = () => {
           <Panel.Heading className="is-flex is-justify-content-center">
             Products
           </Panel.Heading>
-          {productsList.map((product) => {
+          {products.map((product) => {
             return (
               <Panel.Block
                 key={product.id}
@@ -68,36 +67,30 @@ const Products = () => {
                 Price: {product.price}
                 <br></br>
                 Quantity: {product.quantity} <br></br>
-                <Panel.Heading style={{ fontSize: "0.75em" }}>
-                  Customers
-                </Panel.Heading>
-                {Array.isArray(product.customers) ? (
-                  product.customers.map((customer) => {
-                    return (
-                      <Panel.Block>
-                        {customer.name} on {customer.date}
-                        <Button
-                          className="mt-4"
-                          color="primary"
-                          onClick={() => openModal(customer.name)}
-                        >
-                          Add
-                        </Button>
-                      </Panel.Block>
-                    );
-                  })
-                ) : (
-                  <Panel.Block>
-                    {product.customers} on {product.dates}
-                    <Button
-                      className="mt-4"
-                      color="primary"
-                      onClick={() => openModal(product.customers)}
-                    >
-                      Add
-                    </Button>
-                  </Panel.Block>
-                )}
+                <Panel.Heading>Customers</Panel.Heading>
+                {purchases.map((purchase) => {
+                  if (purchase.productId === product.id) {
+                    for (const customer of customers) {
+                      if (customer.id === purchase.customerId) {
+                        return (
+                          <div>
+                            <Panel.Block component={Link} to="/editcustomer">
+                              {customer.firstName + " " + customer.lastName}
+                            </Panel.Block>
+                            <Button
+                              color="primary"
+                              onClick={() => {
+                                openModal(purchase.customerId);
+                              }}
+                            >
+                              Add
+                            </Button>
+                          </div>
+                        );
+                      }
+                    }
+                  }
+                })}
               </Panel.Block>
             );
           })}

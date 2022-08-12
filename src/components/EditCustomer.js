@@ -8,9 +8,13 @@ import {
 } from "react-bulma-companion";
 import PanelComp from "./PanelComp";
 import DropdownComp from "./DropdownComp";
-import { useState } from "react";
-import { customers, purchases, products } from "./database";
+import { useState, useEffect } from "react";
 import InputEditComp from "./InputEditComp";
+import { modalActions } from "../store/modalReducer";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllProducts, selectAllProducts } from "../store/productsReducer";
+import { getAllPurchases, selectAllPurchases } from "../store/purchasesReducer";
+import { getAllCustomers, selectAllCustomers } from "../store/customersReducer";
 
 const EditCustomer = () => {
   const [dropOpen, setDropOpen] = useState(false);
@@ -18,6 +22,28 @@ const EditCustomer = () => {
   const [selectedCustomerId, setSelectedCustomerId] = useState(0);
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [title, setTitle] = useState("Customers");
+  const [input, setInput] = useState("");
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getAllProducts());
+    dispatch(getAllPurchases());
+    dispatch(getAllCustomers());
+  }, [dispatch]);
+
+  const products = useSelector(selectAllProducts);
+  const purchases = useSelector(selectAllPurchases);
+  const customers = useSelector(selectAllCustomers);
+
+  const modal = useSelector((state) => state.modal.modalState);
+  const onChangeInputHandler = (e) => {
+    setInput(e.target.value);
+  };
+
+  const updateCustomer = () => {
+    console.log(input);
+  };
 
   const toggleDropdown = () => {
     setDropOpen(!dropOpen);
@@ -51,6 +77,7 @@ const EditCustomer = () => {
   const currentCustomer = customers.filter(
     (cutomer) => selectedCustomer === cutomer.firstName + " " + cutomer.lastName
   );
+  console.log(selectedCustomerId);
   return (
     <div>
       <Title className="is-flex is-justify-content-center mt-6 mb-6">
@@ -110,17 +137,25 @@ const EditCustomer = () => {
                       <InputEditComp
                         type="text"
                         placeholder="Enter first name"
+                        onChange={onChangeInputHandler}
                       />
                       Last Name:{" "}
                       <InputEditComp
                         type="text"
                         placeholder="Enter last name"
+                        onChange={onChangeInputHandler}
                       />
                       City:{" "}
-                      <InputEditComp type="text" placeholder="Enter city" />
+                      <InputEditComp
+                        type="text"
+                        placeholder="Enter city"
+                        onChange={onChangeInputHandler}
+                      />
                     </Panel.Block>
                     <Panel.Block>
-                      <Button color="primary">Update</Button>
+                      <Button color="primary" onClick={updateCustomer}>
+                        Update
+                      </Button>
                     </Panel.Block>
                   </Column>
                 </Columns>
@@ -130,11 +165,15 @@ const EditCustomer = () => {
         </Column>
         <Column size="half">
           <PanelComp panelHeading="Purchases">
-            {selectedProducts.length > 0
-              ? selectedProducts.map((product) => {
-                  return <Panel.Block>{product.name}</Panel.Block>;
-                })
-              : null}
+            {purchases.map((purchase) => {
+              if (selectedCustomerId === purchase.customerId) {
+                for (const product of products) {
+                  if (product.id === purchase.productId) {
+                    return <Panel.Block>{product.name}</Panel.Block>;
+                  }
+                }
+              }
+            })}
           </PanelComp>
         </Column>
       </Columns>
