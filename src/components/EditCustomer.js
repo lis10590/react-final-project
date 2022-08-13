@@ -10,11 +10,14 @@ import PanelComp from "./PanelComp";
 import DropdownComp from "./DropdownComp";
 import { useState, useEffect } from "react";
 import InputEditComp from "./InputEditComp";
-import { modalActions } from "../store/modalReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllProducts, selectAllProducts } from "../store/productsReducer";
 import { getAllPurchases, selectAllPurchases } from "../store/purchasesReducer";
-import { getAllCustomers, selectAllCustomers } from "../store/customersReducer";
+import {
+  getAllCustomers,
+  selectAllCustomers,
+  updateOneCustomer,
+} from "../store/customersReducer";
 
 const EditCustomer = () => {
   const [dropOpen, setDropOpen] = useState(false);
@@ -22,7 +25,7 @@ const EditCustomer = () => {
   const [selectedCustomerId, setSelectedCustomerId] = useState(0);
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [title, setTitle] = useState("Customers");
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState({ firstName: "", lastName: "", city: "" });
 
   const dispatch = useDispatch();
 
@@ -36,13 +39,24 @@ const EditCustomer = () => {
   const purchases = useSelector(selectAllPurchases);
   const customers = useSelector(selectAllCustomers);
 
-  const modal = useSelector((state) => state.modal.modalState);
   const onChangeInputHandler = (e) => {
-    setInput(e.target.value);
+    const { name, value } = e.target;
+    setInput((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
   };
 
   const updateCustomer = () => {
-    console.log(input);
+    const data = {
+      city: input.city,
+      firstName: input.firstName,
+      lastName: input.lastName,
+    };
+
+    const id = currentCustomer[0].id;
+
+    dispatch(updateOneCustomer(id, data));
   };
 
   const toggleDropdown = () => {
@@ -77,7 +91,7 @@ const EditCustomer = () => {
   const currentCustomer = customers.filter(
     (cutomer) => selectedCustomer === cutomer.firstName + " " + cutomer.lastName
   );
-  console.log(selectedCustomerId);
+
   return (
     <div>
       <Title className="is-flex is-justify-content-center mt-6 mb-6">
@@ -135,18 +149,24 @@ const EditCustomer = () => {
                     <Panel.Block>
                       First Name:{" "}
                       <InputEditComp
+                        name="firstName"
+                        value={input.firstName}
                         type="text"
                         placeholder="Enter first name"
                         onChange={onChangeInputHandler}
                       />
                       Last Name:{" "}
                       <InputEditComp
+                        name="lastName"
+                        value={input.lastName}
                         type="text"
                         placeholder="Enter last name"
                         onChange={onChangeInputHandler}
                       />
                       City:{" "}
                       <InputEditComp
+                        name="city"
+                        value={input.city}
                         type="text"
                         placeholder="Enter city"
                         onChange={onChangeInputHandler}

@@ -7,6 +7,8 @@ const InputEditComp = (props) => {
         <Control>
           {props.inputName}
           <Input
+            name={props.name}
+            value={props.value}
             onChange={props.onChange}
             type={props.type}
             placeholder={props.placeholder}

@@ -27,7 +27,7 @@ export const updateCustomer = async (customerId, newData) => {
     .firestore()
     .collection("customers")
     .doc(customerId)
-    .set(newData);
+    .update(newData);
 };
 
 export const deleteCustomer = async (customerId) => {

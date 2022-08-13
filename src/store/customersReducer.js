@@ -50,9 +50,9 @@ export const getAllCustomers = createAsyncThunk(
 
 export const updateOneCustomer = createAsyncThunk(
   "customers/updatecustomer",
-  async (customerId, thunkAPI) => {
+  async (customerId, newData, thunkAPI) => {
     try {
-      return await updateCustomer(customerId);
+      return await updateCustomer(customerId, newData);
     } catch (error) {
       const message =
         (error.response &&
