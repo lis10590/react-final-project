@@ -18,6 +18,7 @@ import {
   selectAllCustomers,
   updateOneCustomer,
 } from "../store/customersReducer";
+import { Link } from "react-router-dom";
 
 const EditCustomer = () => {
   const [dropOpen, setDropOpen] = useState(false);
@@ -48,15 +49,15 @@ const EditCustomer = () => {
   };
 
   const updateCustomer = () => {
+    const id = currentCustomer[0].id;
     const data = {
+      id: id,
       city: input.city,
       firstName: input.firstName,
       lastName: input.lastName,
     };
 
-    const id = currentCustomer[0].id;
-
-    dispatch(updateOneCustomer(id, data));
+    dispatch(updateOneCustomer(data));
   };
 
   const toggleDropdown = () => {
@@ -189,7 +190,11 @@ const EditCustomer = () => {
               if (selectedCustomerId === purchase.customerId) {
                 for (const product of products) {
                   if (product.id === purchase.productId) {
-                    return <Panel.Block>{product.name}</Panel.Block>;
+                    return (
+                      <Panel.Block component={Link} to="/editproduct">
+                        {product.name}
+                      </Panel.Block>
+                    );
                   }
                 }
               }

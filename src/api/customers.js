@@ -22,11 +22,11 @@ export const addCustomer = async (customer) => {
   await firebase.firestore().collection("customers").add(customer);
 };
 
-export const updateCustomer = async (customerId, newData) => {
+export const updateCustomer = async (newData) => {
   await firebase
     .firestore()
     .collection("customers")
-    .doc(customerId)
+    .doc(newData.id)
     .update(newData);
 };
 

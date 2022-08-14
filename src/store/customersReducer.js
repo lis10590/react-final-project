@@ -50,9 +50,9 @@ export const getAllCustomers = createAsyncThunk(
 
 export const updateOneCustomer = createAsyncThunk(
   "customers/updatecustomer",
-  async (customerId, newData, thunkAPI) => {
+  async (newData, thunkAPI) => {
     try {
-      return await updateCustomer(customerId, newData);
+      return await updateCustomer(newData);
     } catch (error) {
       const message =
         (error.response &&
@@ -118,10 +118,27 @@ const customersSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.customers = state.customers.filter(
-          (product) => product.id !== action.payload.id
+          (customer) => customer.id !== action.payload.id
         );
       })
       .addCase(deleteOneCustomer.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(updateOneCustomer.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(updateOneCustomer.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.customers = state.customers.map((customer) => {
+          if (customer.id === action.payload.id) {
+            customer = action.payload;
+          }
+        });
+      })
+      .addCase(updateOneCustomer.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
