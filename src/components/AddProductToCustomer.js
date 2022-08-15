@@ -78,7 +78,7 @@ const AddProductToCustomer = (props) => {
             </div>
             <div className="is-flex is-justify-content-center mt-6">
               <Button onClick={onSaveProductHandler} color="primary">
-                Save
+                {props.btnName}
               </Button>
             </div>
           </Modal.CardBody>

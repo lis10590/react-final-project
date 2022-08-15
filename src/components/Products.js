@@ -100,6 +100,7 @@ const Products = () => {
           isOpen={modal}
           onClose={CloseModal}
           customer={selectedCustomer}
+          btnName="Save"
         />
       </Column>
     </Columns>
