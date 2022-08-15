@@ -49,6 +49,7 @@ const Purchases = () => {
         </Icon>
       </Control>
       <Columns>
+        {purchases.map((purchase) => {})}
         <Column size="half">
           <Panel>
             <Panel.Heading>Customers</Panel.Heading>
