@@ -20,17 +20,20 @@ const Purchases = () => {
   const dispatch = useDispatch();
   const [date, setDate] = useState("");
   useEffect(() => {
-    getAllCustomers();
-    getAllProducts();
-    getAllPurchases();
+    dispatch(getAllCustomers());
+    dispatch(getAllProducts());
+    dispatch(getAllPurchases());
   }, [dispatch]);
 
   const products = useSelector(selectAllProducts);
   const customers = useSelector(selectAllCustomers);
   const purchases = useSelector(selectAllPurchases);
+  console.log(products);
+  console.log(customers);
 
   const onChangeDateHandler = (e) => {
     setDate(e.target.value);
+    console.log(date);
   };
 
   return (
@@ -49,24 +52,38 @@ const Purchases = () => {
         </Icon>
       </Control>
       <Columns>
-        {purchases.map((purchase) => {})}
         <Column size="half">
           <Panel>
             <Panel.Heading>Customers</Panel.Heading>
             {customers.map((customer) => {
-              return (
-                <Panel.Block>
-                  {customer.firstName + " " + customer.lastName}
-                </Panel.Block>
-              );
+              for (const purchase of purchases) {
+                if (
+                  purchase.customerId === customer.id &&
+                  purchase.date.includes(date)
+                ) {
+                  return (
+                    <Panel.Block>
+                      {customer.firstName + " " + customer.lastName}
+                    </Panel.Block>
+                  );
+                }
+              }
             })}
           </Panel>
         </Column>
+
         <Column size="half">
           <Panel>
             <Panel.Heading>Products</Panel.Heading>
             {products.map((product) => {
-              return <Panel.Block>{product.name}</Panel.Block>;
+              for (const purchase of purchases) {
+                if (
+                  purchase.productId === product.id &&
+                  purchase.date.includes(date)
+                ) {
+                  return <Panel.Block>{product.name}</Panel.Block>;
+                }
+              }
             })}
           </Panel>
         </Column>
