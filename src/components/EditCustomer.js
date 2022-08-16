@@ -12,11 +12,16 @@ import { useState, useEffect } from "react";
 import InputEditComp from "./InputEditComp";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllProducts, selectAllProducts } from "../store/productsReducer";
-import { getAllPurchases, selectAllPurchases } from "../store/purchasesReducer";
+import {
+  getAllPurchases,
+  selectAllPurchases,
+  deleteOnePurchase,
+} from "../store/purchasesReducer";
 import {
   getAllCustomers,
   selectAllCustomers,
   updateOneCustomer,
+  deleteOneCustomer,
 } from "../store/customersReducer";
 import { Link } from "react-router-dom";
 
@@ -58,6 +63,16 @@ const EditCustomer = () => {
     };
 
     dispatch(updateOneCustomer(data));
+  };
+
+  const deleteCustomer = () => {
+    const id = currentCustomer[0].id;
+    for (const purchase of purchases) {
+      if (purchase.customerId === id) {
+        dispatch(deleteOnePurchase(purchase.id));
+      }
+    }
+    dispatch(deleteOneCustomer(id));
   };
 
   const toggleDropdown = () => {
@@ -121,7 +136,7 @@ const EditCustomer = () => {
                   );
                 })}
               </DropdownComp>
-              <Button className="mt-4" color="primary">
+              <Button onClick={deleteCustomer} className="mt-4" color="primary">
                 Delete Customer
               </Button>
               {selectedCustomer && selectedCustomer !== "Customers" && (
